@@ -4,7 +4,6 @@ import './index.scss'
 import  { createWebHashHistory ,createRouter } from 'vue-router'
 
 import Home from './views/Home.vue'
-import Doc from './views/Doc.vue'
 
 const history = createWebHashHistory()
 const router = createRouter({
@@ -14,7 +13,7 @@ const router = createRouter({
     path:'/',component: Home
   },
   {
-    path:'/doc',component:Doc
+    path:'/doc',component:()=>import('./views/Doc.vue')
   }]
 })
 
