@@ -1,5 +1,5 @@
 <template>
-    <button class="kaba-btn" :class="`theme-${theme}`">
+    <button class="kaba-btn" :class="`kaba-theme-${theme}`">
       <slot />
     </button>
 </template>
