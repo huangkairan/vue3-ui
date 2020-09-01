@@ -1,28 +1,74 @@
 <template>
-<div class="kaba-dialog-overlay"></div>
-<div class="kaba-dialog-wrapper">
-  <div class="kaba-dialog">
-    <header>标题</header>
-    <main>
-      <p>diyihang </p>
-      <p>第二行</p>
-    </main>
-    <footer>
-      <Button>OK</Button>
-      <Button>Cancel</Button>
-    </footer>
-  </div>
-
-</div>
+<template v-if="visible">
+  <Teleport to="body">
+    <div class="kaba-dialog-overlay" @click="onClickOverlay"></div>
+    <div class="kaba-dialog-wrapper">
+      <div class="kaba-dialog">
+        <header>
+          <slot name="title" />
+          <span @click="close" class="kaba-dialog-close"></span>
+        </header>
+        <main>
+          <slot name="content" />
+        </main>
+        <footer>
+          <Button level="main" @click="ok">OK</Button>
+          <Button @click="cancel">Cancel</Button>
+        </footer>
+      </div>
+    </div>
+  </Teleport>
+</template>
 </template>
 
-<script>
-import Button from './Button.vue'
+<script lang="ts">
+import Button from "./Button.vue";
 export default {
+  props: {
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    closeOnClickOverlay: {
+      type: Boolean,
+      default: true
+    },
+    ok: {
+      type: Function
+    },
+    cancel: {
+      type: Function
+    }
+  },
   components: {
-    Button
+    Button,
+  },
+  setup(props, context) {
+    const close = () => {
+      context.emit('update:visible', false)
+    }
+    const onClickOverlay = () => {
+      if (props.closeOnClickOverlay) {
+        close()
+      }
+    }
+    const ok = () => {
+      if (props.ok?.() !== false) {
+        close()
+      }
+    }
+    const cancel = () => {
+      props.cancel?.()
+      close()
+    }
+    return {
+      close,
+      onClickOverlay,
+      ok,
+      cancel
+    }
   }
-}
+};
 </script>
 
 <style lang="scss">
